@@ -29,6 +29,7 @@ const LoginPage = () => {
                 timer: 1500,
                 showConfirmButton: false,
             });
+            // লগইন সফল হলে ড্যাশবোর্ডে পাঠানো এবং সেশন রিফ্রেশ করা
             router.push("/dashboard");
             router.refresh();
         } else {
@@ -41,8 +42,9 @@ const LoginPage = () => {
         }
     };
 
-    const handleSocialLogin = (provider) => {
-        signIn(provider, { callbackUrl: "/" });
+    // গুগল লগইন লজিক
+    const handleSocialLogin = async (provider) => {
+        await signIn(provider, { callbackUrl: "/" });
     };
 
     return (
@@ -58,50 +60,60 @@ const LoginPage = () => {
                             name="email"
                             type="email"
                             placeholder="Enter your email"
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             required
                         />
                     </div>
 
                     <div className="relative">
                         <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
-                        <input
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                            required
-                        />
-                        {/* Eye Icon Button */}
-                        <button
-                            type="button"
-                            className="absolute right-3 top-[38px] text-gray-500 hover:text-blue-600 transition-colors"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </button>
+                        <div className="relative">
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter your password"
+                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                required
+                            />
+                            {/* Eye Icon Button - পজিশন ফিক্স করা হয়েছে */}
+                            <button
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 transition-colors"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
+                        className="w-full py-2 mt-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md active:scale-95"
                     >
                         Sign In
                     </button>
                 </form>
 
-                <div className="relative flex items-center justify-center w-full mt-6 border-t">
-                    <span className="absolute px-3 bg-white text-gray-500 text-sm">OR</span>
+                <div className="relative flex items-center justify-center w-full mt-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <span className="relative px-3 bg-white text-gray-500 text-sm italic">OR</span>
                 </div>
 
                 {/* Social Login Buttons */}
                 <div className="flex flex-col gap-3 mt-6">
                     <button
+                        type="button"
                         onClick={() => handleSocialLogin("google")}
-                        className="flex items-center justify-center w-full py-2 space-x-2 border rounded-lg hover:bg-gray-50 transition duration-300 shadow-sm"
+                        className="flex items-center justify-center w-full py-2 space-x-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-300 shadow-sm active:scale-95"
                     >
-                        <img src="https://www.svgrepo.com/show/355037/google.svg" className="w-5 h-5" alt="Google" />
-                        <span>Continue with Google</span>
+                        <img
+                            src="https://www.svgrepo.com/show/355037/google.svg"
+                            className="w-5 h-5"
+                            alt="Google"
+                        />
+                        <span className="font-medium text-gray-700">Continue with Google</span>
                     </button>
                 </div>
 

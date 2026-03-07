@@ -5,19 +5,39 @@ export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
 
-  // যদি লগইন না থাকে এবং ড্যাশবোর্ডে যাওয়ার চেষ্টা করে, তবে লগইনে পাঠাবে
-  if (!token && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  /**
+   * ১. Public routes check: যদি ইউজার লগইন না থাকে
+   * এবং প্রটেক্টেড পেজে (Dashboard বা All Products) যাওয়ার চেষ্টা করে।
+   */
+  const isProtectedRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/products");
+
+  if (!token && isProtectedRoute) {
+    // লগইন পেজে পাঠানোর সময় 'callbackUrl' যোগ করা হয়েছে যাতে লগইন করার পর সরাসরি ঐ পেজেই ফিরে আসে
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${pathname}`, req.url));
   }
 
-  // যদি লগইন থাকে এবং লগইন/রেজিস্টার পেজে যাওয়ার চেষ্টা করে, তবে হোমে পাঠাবে
-  if (token && (pathname === "/login" || pathname === "/register")) {
+  /**
+   * ২. Authenticated users check: যদি ইউজার লগইন থাকে
+   * এবং লগইন বা রেজিস্টার পেজে যেতে চায়, তবে হোমে পাঠিয়ে দাও।
+   */
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  if (token && isAuthPage) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   return NextResponse.next();
 }
 
+/**
+ * Matcher configuration
+ * এখানে '/products/:path*' যোগ করা হয়েছে যাতে অল প্রোডাক্ট এবং ডিটেইলস পেজও সিকিউর থাকে।
+ */
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
+  matcher: [
+    "/dashboard/:path*", 
+    "/products/:path*", 
+    "/login", 
+    "/register"
+  ],
 };

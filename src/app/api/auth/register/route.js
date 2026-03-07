@@ -4,20 +4,27 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { email, password } = await req.json(); // Name রিমুভ করা হয়েছে
+    
+    const { name, email, password, image } = await req.json(); 
+    
     const db = await dbConnect();
     const usersCollection = db.collection("users");
 
+    
     const existingUser = await usersCollection.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ message: "User already exists!" }, { status: 400 });
     }
 
+   
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    
     const newUser = {
+      name: name || "New User", 
       email,
       password: hashedPassword,
+      image: image || "", 
       role: "user",
       createdAt: new Date(),
     };
