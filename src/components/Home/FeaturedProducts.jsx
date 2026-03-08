@@ -1,6 +1,7 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Eye, ShoppingCart, Star } from "lucide-react";
-
 
 const ProductCard = ({ product }) => {
     return (
@@ -8,7 +9,7 @@ const ProductCard = ({ product }) => {
             <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-50 mb-4">
                 <img
                     src={product?.image || "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=300"}
-                    alt={product?.name}
+                    alt={product?.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
@@ -18,9 +19,9 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div className="space-y-2 text-left">
-                <p className="text-[10px] font-bold text-rose-700 uppercase tracking-widest">{product?.category}</p>
+                <p className="text-[10px] font-bold text-rose-700 uppercase tracking-widest">{product?.category || "Gadget"}</p>
                 <h3 className="font-bold text-gray-900 truncate group-hover:text-rose-700 transition-colors">
-                    {product?.name}
+                    {product?.title}
                 </h3>
 
                 <div className="flex items-center justify-between pt-2 border-t border-gray-50 mt-2">
@@ -42,18 +43,37 @@ const ProductCard = ({ product }) => {
     );
 };
 
-
 const FeaturedProducts = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const products = [
-        { _id: "1", name: "Flagship Smartphone", price: 999, category: "Mobile", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=300" },
-        { _id: "2", name: "Premium Noise Cancelling Headphones", price: 349, category: "Audio", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=300" },
-        { _id: "3", name: "Smart Watch Elite Series", price: 299, category: "Wearables", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=300" },
-    ];
+    useEffect(() => {
+        const getProducts = async () => {
+            try {
+                const res = await fetch("/api/products");
+                const data = await res.json();
+                // 8 ta product slice kora hocche
+                setProducts(data.slice(0, 8));
+            } catch (error) {
+                console.error("Error fetching featured products:", error);
+            } finally {
+                // Fetch shesh hole loading false hobe
+                setLoading(false);
+            }
+        };
+        getProducts();
+    }, []);
+
+    // Data load hoa porjonto ei spinner-ti dekhabe
+    if (loading) return (
+        <div className="flex flex-col items-center justify-center py-32">
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-rose-700 rounded-full animate-spin"></div>
+            <p className="mt-4 text-gray-500 font-medium italic animate-pulse">Loading Featured Gadgets...</p>
+        </div>
+    );
 
     return (
-        <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
+        <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in duration-700">
             <div className="text-center mb-16">
                 <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">
                     Featured <span className="text-rose-700">Gadgets</span>
@@ -61,13 +81,21 @@ const FeaturedProducts = () => {
                 <div className="w-16 h-1 bg-rose-700 mx-auto mt-2"></div>
             </div>
 
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {products.map((product) => (
                     <ProductCard key={product._id} product={product} />
                 ))}
             </div>
+
+            <div className="mt-16 text-center">
+                <Link href="/products">
+                    <button className="px-10 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-rose-700 transition-all active:scale-95 shadow-xl uppercase tracking-widest text-xs">
+                        View All Gadgets
+                    </button>
+                </Link>
+            </div>
         </section>
     );
 };
+
 export default FeaturedProducts;

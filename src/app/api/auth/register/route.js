@@ -1,38 +1,83 @@
 import { dbConnect } from "@/lib/mongodb";
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
 
-export async function POST(req) {
-  try {
+const handler = NextAuth({
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
     
-    const { name, email, password, image } = await req.json(); 
-    
-    const db = await dbConnect();
-    const usersCollection = db.collection("users");
-
-    
-    const existingUser = await usersCollection.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json({ message: "User already exists!" }, { status: 400 });
-    }
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
 
    
-    const hashedPassword = await bcrypt.hash(password, 10);
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials;
+        if (!email || !password) return null;
 
+        const db = await dbConnect();
+        const user = await db.collection("users").findOne({ email });
+
+        if (!user || !user.password) return null;
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) return null;
+
+        return user;
+      },
+    }),
+  ],
+  
+ 
+  secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+   
+    async signIn({ user, account }) {
+      if (account.provider === "google") {
+        try {
+          const db = await dbConnect();
+          const usersCollection = db.collection("users");
+
+          const existingUser = await usersCollection.findOne({ email: user.email });
+
+          if (!existingUser) {
+            await usersCollection.insertOne({
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              role: "user",
+              createdAt: new Date(),
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Error saving google user:", error);
+          return false;
+        }
+      }
+      return true;
+    },
     
-    const newUser = {
-      name: name || "New User", 
-      email,
-      password: hashedPassword,
-      image: image || "", 
-      role: "user",
-      createdAt: new Date(),
-    };
+   
+    async session({ session, token }) {
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/login", 
+  },
+});
 
-    await usersCollection.insertOne(newUser);
-    return NextResponse.json({ message: "User registered successfully!" }, { status: 201 });
-
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
+export { handler as GET, handler as POST };

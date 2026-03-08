@@ -6,19 +6,17 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
   /**
-   * ১. Public routes check: যদি ইউজার লগইন না থাকে
-   * এবং প্রটেক্টেড পেজে (Dashboard বা All Products) যাওয়ার চেষ্টা করে।
+   * 
+   * এখন শুধু /dashboard এবং এর ভেতরের পেজগুলো প্রটেক্টেড থাকবে।
    */
-  const isProtectedRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/products");
+  const isProtectedRoute = pathname.startsWith("/dashboard");
 
   if (!token && isProtectedRoute) {
-    // লগইন পেজে পাঠানোর সময় 'callbackUrl' যোগ করা হয়েছে যাতে লগইন করার পর সরাসরি ঐ পেজেই ফিরে আসে
     return NextResponse.redirect(new URL(`/login?callbackUrl=${pathname}`, req.url));
   }
 
   /**
-   * ২. Authenticated users check: যদি ইউজার লগইন থাকে
-   * এবং লগইন বা রেজিস্টার পেজে যেতে চায়, তবে হোমে পাঠিয়ে দাও।
+   * ২. Authenticated users check:
    */
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
@@ -29,15 +27,10 @@ export async function middleware(req) {
   return NextResponse.next();
 }
 
-/**
- * Matcher configuration
- * এখানে '/products/:path*' যোগ করা হয়েছে যাতে অল প্রোডাক্ট এবং ডিটেইলস পেজও সিকিউর থাকে।
- */
 export const config = {
   matcher: [
     "/dashboard/:path*", 
-    "/products/:path*", 
     "/login", 
     "/register"
-  ],
+   ],
 };

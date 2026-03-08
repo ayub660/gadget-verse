@@ -98,7 +98,7 @@ const Navbar = () => {
                                                 onClick={() => signOut({ callbackUrl: '/' })}
                                                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all font-bold"
                                             >
-                                                <LogOut size={18} /> Logout Account
+                                                <LogOut size={18} /> Logout
                                             </button>
                                         </div>
                                     </div>
