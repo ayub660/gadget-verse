@@ -7,7 +7,7 @@ export async function middleware(req) {
 
   /**
    * 
-   * এখন শুধু /dashboard এবং এর ভেতরের পেজগুলো প্রটেক্টেড থাকবে।
+   * Dashboar  er vitoer card protected
    */
   const isProtectedRoute = pathname.startsWith("/dashboard");
 

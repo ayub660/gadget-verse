@@ -34,7 +34,7 @@ Follow these steps to get a local copy of the project up and running:
 
 1. Clone the Repository
 Bash
-git clone https://github.com/your-username/gadgetverse.git
+git clone https://github.com/ayub660/gadget-verse.git
 cd gadgetverse
 2. Install Dependencies
 Bash
