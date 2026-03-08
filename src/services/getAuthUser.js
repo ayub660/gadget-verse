@@ -9,7 +9,7 @@ export const getAuthUser = async () => {
             return null;
         }
 
-        // সেশন থেকে ইউজারের সব ডাটা রিটার্ন করবে
+       
         return session.user;
     } catch (error) {
         console.error("Auth User Error:", error);

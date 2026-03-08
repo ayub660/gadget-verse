@@ -1,7 +1,7 @@
 import { Quote } from "lucide-react";
 
 const reviews = [
-    { name: "John Doe", role: "Tech Enthusiast", text: "GadgetVerse has the best collection of latest tech. The shipping was incredibly fast!" },
+    { name: "Ayub", role: "Tech Enthusiast", text: "GadgetVerse has the best collection of latest tech. The shipping was incredibly fast!" },
     { name: "Sarah Khan", role: "Software Engineer", text: "Quality products and amazing customer service. Highly recommended for any gadget lover." },
     { name: "Rahat Ahmed", role: "Gamer", text: "Found the exact gaming peripherals I was looking for. The prices are very competitive." },
 ];

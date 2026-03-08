@@ -8,7 +8,7 @@ const DashboardPage = () => {
 
     return (
         <div className="p-6 lg:p-12 bg-gray-50 min-h-screen">
-            {/* স্বাগতম সেকশন */}
+            {/* Wellcome section */}
             <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-center gap-6 mb-10">
                 <img
                     src={session?.user?.image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
@@ -23,7 +23,7 @@ const DashboardPage = () => {
                 </div>
             </div>
 
-            {/* কুইক অ্যাকশন কার্ডস */}
+            {/* Quick action card*/}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Link href="/dashboard/add-product" className="group p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-rose-200 hover:shadow-md transition-all">
                     <div className="bg-rose-50 w-12 h-12 rounded-xl flex items-center justify-center text-rose-700 mb-4 group-hover:bg-rose-700 group-hover:text-white transition-colors">

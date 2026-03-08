@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, Eye } from "lucide-react";
 import Link from "next/link";
-import Swal from "sweetalert2"; // SweetAlert ইমপোর্ট করুন
+import Swal from "sweetalert2";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);

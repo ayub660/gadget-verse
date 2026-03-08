@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema(
     image: { type: String, required: true },
     stock: { type: Number, default: 0 },
     brand: { type: String },
-    addedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // কোন ইউজার প্রোডাক্টটি অ্যাড করেছে
+    addedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
   },
   { timestamps: true }
 );

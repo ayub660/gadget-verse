@@ -31,7 +31,7 @@ const RegisterPage = () => {
             const data = await res.json();
 
             if (res.ok) {
-                // ১. সাকসেস মেসেজ দেখানো
+
                 Swal.fire({
                     title: "Registration Successful!",
                     text: "Wait a moment, we are logging you in...",
@@ -41,7 +41,7 @@ const RegisterPage = () => {
                     timerProgressBar: true,
                 });
 
-                // ২. অটোমেটিক লগইন করানো যাতে সরাসরি ড্যাশবোর্ড এক্সেস পায়
+
                 const loginRes = await signIn("credentials", {
                     email,
                     password,

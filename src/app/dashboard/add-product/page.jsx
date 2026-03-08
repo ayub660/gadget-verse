@@ -16,7 +16,7 @@ const AddProductPage = () => {
             category: form.category.value,
         };
 
-        // লোডিং অ্যালার্ট দেখানো (ইউজার যেন বুঝতে পারে কাজ হচ্ছে)
+        // Loading spinner 
         Swal.fire({
             title: 'Uploading...',
             text: 'Please wait while we save your gadget.',
@@ -27,7 +27,7 @@ const AddProductPage = () => {
         });
 
         try {
-            // আসল API কল এখানে হচ্ছে
+            // Api Call 
             const res = await fetch("/api/products", {
                 method: "POST",
                 headers: {
@@ -37,7 +37,7 @@ const AddProductPage = () => {
             });
 
             if (res.ok) {
-                // সফল হলে সুন্দর সাকসেস মেসেজ
+                // Success message
                 Swal.fire({
                     icon: "success",
                     title: "Excellent!",
@@ -56,7 +56,7 @@ const AddProductPage = () => {
                 throw new Error("Failed to add product");
             }
         } catch (error) {
-            // এরর হলে মেসেজ
+            // Error msg 
             Swal.fire({
                 icon: "error",
                 title: "Oops...",

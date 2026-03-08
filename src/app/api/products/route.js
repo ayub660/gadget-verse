@@ -2,7 +2,7 @@ import { dbConnect } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 
-// ১. সব প্রোডাক্ট গেট (GET) করা - এটি ম্যানেজ পেজে ডাটা দেখাবে
+// 1. All product GET method 
 export async function GET() {
   try {
     const db = await dbConnect();
@@ -13,7 +13,7 @@ export async function GET() {
   }
 }
 
-// ২. নতুন প্রোডাক্ট সেভ (POST) করা
+// 2 new product POST save kora 
 export async function POST(req) {
   try {
     const body = await req.json();
